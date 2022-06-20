@@ -17,12 +17,28 @@ public class RatesExchangeController {
     public static final String ERROR_AMOUNT_INCORRECT_FORMAT = "error: currency incorrect format";
     public static final String ERROR_REQUESTED_AMOUNT_IS_NEGATIVE = "error: requested amount should not be negative";
     public static final String ERROR_SERVICE_DATA_UPDATE_ERROR = "error: service data update error";
+    public static final String ERROR_API_KEY_IS_REQUIRED = "error: api key is required";
+    public static final String ERROR_API_KEY_IS_INCORRECT = "error: api key is incorrect";
 
     @GetMapping("/exchange_amount")
     public ExchangeAmountResponse exchangeAmount(@RequestParam Map<String,String> requestParams){
         String from = requestParams.get("from");
         String to = requestParams.get("to");
         double amount;
+
+        if(RatesExchangeService.apiKey == null){
+            ExchangeAmountResponse response = ExchangeAmountResponse.builder()
+                    .errorMessage(ERROR_API_KEY_IS_REQUIRED)
+                    .build();
+            return response;
+        }
+
+        if(RatesExchangeService.apiKeyIsIncorrect){
+            ExchangeAmountResponse response = ExchangeAmountResponse.builder()
+                    .errorMessage(ERROR_API_KEY_IS_INCORRECT)
+                    .build();
+            return response;
+        }
 
         String errorMessage = checkRequestParameterErrors(from, to);
         if(!errorMessage.equals(CORRECT)){

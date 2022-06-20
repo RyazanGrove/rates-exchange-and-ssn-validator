@@ -8,7 +8,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class RatesExchangeAndSsnValidatorApplication {
 
 	public static void main(String[] args) {
-		RatesExchangeService.apiKey = args[0];
+		if(args.length < 1){
+			System.err.println("For RatesExchange API working API Key is required");
+		} else {
+			RatesExchangeService.apiKey = args[0];
+		}
 		SpringApplication.run(RatesExchangeAndSsnValidatorApplication.class, args);
 	}
 }
