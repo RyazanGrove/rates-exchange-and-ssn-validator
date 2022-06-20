@@ -12,9 +12,9 @@ import java.util.*;
 public class RatesExchangeController {
 
     public static final String CORRECT = "OK";
-    public static final String ERROR_CURRENCY = "error: currency is empty";
+    public static final String ERROR_CURRENCY_IS_EMPTY = "error: currency is empty";
     public static final String ERROR_CURRENCY_IS_NOT_SUPPORTED = "error: currency is not supported";
-    public static final String ERROR_CURRENCY_INCORRECT_FORMAT = "error: currency incorrect format";
+    public static final String ERROR_AMOUNT_INCORRECT_FORMAT = "error: currency incorrect format";
     public static final String ERROR_REQUESTED_AMOUNT_IS_NEGATIVE = "error: requested amount should not be negative";
     public static final String ERROR_SERVICE_DATA_UPDATE_ERROR = "error: service data update error";
 
@@ -37,7 +37,7 @@ public class RatesExchangeController {
         } catch (NumberFormatException e) {
             System.out.println(e);
             ExchangeAmountResponse response = ExchangeAmountResponse.builder()
-                    .errorMessage(ERROR_CURRENCY_INCORRECT_FORMAT)
+                    .errorMessage(ERROR_AMOUNT_INCORRECT_FORMAT)
                     .build();
             return response;
         }
@@ -73,12 +73,12 @@ public class RatesExchangeController {
 
     public static String checkRequestParameterErrors(String from, String to){
         if(from == null || from.isEmpty() || to == null || to.isEmpty()){
-            return ERROR_CURRENCY;
+            return ERROR_CURRENCY_IS_EMPTY;
         }
         return CORRECT;
     }
 
-    String verifyRequestParameters(String from, String to, double amount) {
+    public static String verifyRequestParameters(String from, String to, double amount) {
         if(!RatesExchangeService.supportedCurrencies.contains(from) || !RatesExchangeService.supportedCurrencies.contains(to)) {
             return ERROR_CURRENCY_IS_NOT_SUPPORTED;
         }

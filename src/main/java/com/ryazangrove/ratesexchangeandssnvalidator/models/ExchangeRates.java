@@ -12,7 +12,7 @@ public class ExchangeRates {
     public Rates rates;
 
     @Data
-    public class Rates {
+    public static class Rates {
         @JsonProperty("EUR")
         public double eur;
         @JsonProperty("USD")
