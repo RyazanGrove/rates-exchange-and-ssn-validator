@@ -34,7 +34,7 @@ class RatesExchangeControllerIntTest {
         MultiValueMap<String, String> paramsMap = new LinkedMultiValueMap<>(){{
             put("from", new ArrayList<String>(Arrays.asList("EUR")));
             put("to", new ArrayList<String>(Arrays.asList("USD")));
-            put("amount", new ArrayList<String>(Arrays.asList("100")));
+            put("from_amount", new ArrayList<String>(Arrays.asList("100")));
         }};
         Map<String, Double> exchangeRatesMap = new HashMap<String, Double>(){{
             put("EUR-USD", 1.04);
@@ -60,7 +60,7 @@ class RatesExchangeControllerIntTest {
         MultiValueMap<String, String> paramsMap = new LinkedMultiValueMap<>(){{
             put("from", new ArrayList<String>(Arrays.asList("EUR")));
             put("to", new ArrayList<String>(Arrays.asList("USD")));
-            put("amount", new ArrayList<String>(Arrays.asList("100.2")));
+            put("from_amount", new ArrayList<String>(Arrays.asList("100.2")));
         }};
         RatesExchangeService.exchangeRatesMap = null;
         RatesExchangeService.apiKey = "apiKey";
@@ -70,7 +70,7 @@ class RatesExchangeControllerIntTest {
         MvcResult result = mvc.perform(request).andReturn();
 
         ExchangeAmountResponse expectedResponse = ExchangeAmountResponse.builder()
-                .errorMessage(RatesExchangeController.ERROR_SERVICE_DATA_UPDATE_ERROR)
+                .error_Message(RatesExchangeController.ERROR_SERVICE_DATA_UPDATE_ERROR)
                 .build();
         assertEquals(objectMapper.writeValueAsString(expectedResponse), result.getResponse().getContentAsString(), "RatesExchangeController.exchangeAmount() should return error. Not data loaded");
     }
@@ -80,7 +80,7 @@ class RatesExchangeControllerIntTest {
         MultiValueMap<String, String> paramsMap = new LinkedMultiValueMap<>(){{
             put("from", new ArrayList<String>(Arrays.asList("")));
             put("to", new ArrayList<String>(Arrays.asList("USD")));
-            put("amount", new ArrayList<String>(Arrays.asList("100.2")));
+            put("from_amount", new ArrayList<String>(Arrays.asList("100.2")));
         }};
         RatesExchangeService.apiKey = "apiKey";
         ObjectMapper objectMapper = new ObjectMapper();
@@ -89,7 +89,7 @@ class RatesExchangeControllerIntTest {
         MvcResult result = mvc.perform(request).andReturn();
 
         ExchangeAmountResponse expectedResponse = ExchangeAmountResponse.builder()
-                .errorMessage(RatesExchangeController.ERROR_CURRENCY_IS_EMPTY)
+                .error_Message(RatesExchangeController.ERROR_CURRENCY_IS_EMPTY)
                 .build();
         assertEquals(objectMapper.writeValueAsString(expectedResponse), result.getResponse().getContentAsString(), "RatesExchangeController.exchangeAmount() should return error. Currency is empty");
     }
@@ -98,7 +98,7 @@ class RatesExchangeControllerIntTest {
     void validateExchangeAmountRequestParameterCurrencyIsMissing() throws Exception {
         MultiValueMap<String, String> paramsMap = new LinkedMultiValueMap<>(){{
             put("from", new ArrayList<String>(Arrays.asList("EUR")));
-            put("amount", new ArrayList<String>(Arrays.asList("100.2")));
+            put("from_amount", new ArrayList<String>(Arrays.asList("100.2")));
         }};
         RatesExchangeService.apiKey = "apiKey";
         ObjectMapper objectMapper = new ObjectMapper();
@@ -107,7 +107,7 @@ class RatesExchangeControllerIntTest {
         MvcResult result = mvc.perform(request).andReturn();
 
         ExchangeAmountResponse expectedResponse = ExchangeAmountResponse.builder()
-                .errorMessage(RatesExchangeController.ERROR_CURRENCY_IS_EMPTY)
+                .error_Message(RatesExchangeController.ERROR_CURRENCY_IS_EMPTY)
                 .build();
         assertEquals(objectMapper.writeValueAsString(expectedResponse), result.getResponse().getContentAsString(), "RatesExchangeController.exchangeAmount() should return error. Currency is missing");
     }
@@ -117,7 +117,7 @@ class RatesExchangeControllerIntTest {
         MultiValueMap<String, String> paramsMap = new LinkedMultiValueMap<>(){{
             put("from", new ArrayList<String>(Arrays.asList("RUB")));
             put("to", new ArrayList<String>(Arrays.asList("EUR")));
-            put("amount", new ArrayList<String>(Arrays.asList("100.2")));
+            put("from_amount", new ArrayList<String>(Arrays.asList("100.2")));
         }};
         RatesExchangeService.apiKey = "apiKey";
         ObjectMapper objectMapper = new ObjectMapper();
@@ -126,7 +126,7 @@ class RatesExchangeControllerIntTest {
         MvcResult result = mvc.perform(request).andReturn();
 
         ExchangeAmountResponse expectedResponse = ExchangeAmountResponse.builder()
-                .errorMessage(RatesExchangeController.ERROR_CURRENCY_IS_NOT_SUPPORTED)
+                .error_Message(RatesExchangeController.ERROR_CURRENCY_IS_NOT_SUPPORTED)
                 .build();
         assertEquals(objectMapper.writeValueAsString(expectedResponse), result.getResponse().getContentAsString(), "RatesExchangeController.exchangeAmount() should return error. Requested currency is not supported");
     }
@@ -136,7 +136,7 @@ class RatesExchangeControllerIntTest {
         MultiValueMap<String, String> paramsMap = new LinkedMultiValueMap<>(){{
             put("from", new ArrayList<String>(Arrays.asList("EUR")));
             put("to", new ArrayList<String>(Arrays.asList("USD")));
-            put("amount", new ArrayList<String>(Arrays.asList("-10")));
+            put("from_amount", new ArrayList<String>(Arrays.asList("-10")));
         }};
         RatesExchangeService.apiKey = "apiKey";
         ObjectMapper objectMapper = new ObjectMapper();
@@ -145,7 +145,7 @@ class RatesExchangeControllerIntTest {
         MvcResult result = mvc.perform(request).andReturn();
 
         ExchangeAmountResponse expectedResponse = ExchangeAmountResponse.builder()
-                .errorMessage(RatesExchangeController.ERROR_REQUESTED_AMOUNT_IS_NEGATIVE)
+                .error_Message(RatesExchangeController.ERROR_REQUESTED_AMOUNT_IS_NEGATIVE)
                 .build();
         assertEquals(objectMapper.writeValueAsString(expectedResponse), result.getResponse().getContentAsString(), "RatesExchangeController.exchangeAmount() should return error. Requested amount is negative");
     }
@@ -155,7 +155,7 @@ class RatesExchangeControllerIntTest {
         MultiValueMap<String, String> paramsMap = new LinkedMultiValueMap<>(){{
             put("from", new ArrayList<String>(Arrays.asList("USD")));
             put("to", new ArrayList<String>(Arrays.asList("EUR")));
-            put("amount", new ArrayList<String>(Arrays.asList("1a5b8.85")));
+            put("from_amount", new ArrayList<String>(Arrays.asList("1a5b8.85")));
         }};
         RatesExchangeService.apiKey = "apiKey";
         ObjectMapper objectMapper = new ObjectMapper();
@@ -164,7 +164,7 @@ class RatesExchangeControllerIntTest {
         MvcResult result = mvc.perform(request).andReturn();
 
         ExchangeAmountResponse expectedResponse = ExchangeAmountResponse.builder()
-                .errorMessage(RatesExchangeController.ERROR_AMOUNT_INCORRECT_FORMAT)
+                .error_Message(RatesExchangeController.ERROR_AMOUNT_INCORRECT_FORMAT)
                 .build();
         assertEquals(objectMapper.writeValueAsString(expectedResponse), result.getResponse().getContentAsString(), "RatesExchangeController.exchangeAmount() should return error. Requested amount is in incorrect format");
     }
@@ -174,7 +174,7 @@ class RatesExchangeControllerIntTest {
         MultiValueMap<String, String> paramsMap = new LinkedMultiValueMap<>(){{
             put("from", new ArrayList<String>(Arrays.asList("USD")));
             put("to", new ArrayList<String>(Arrays.asList("EUR")));
-            put("amount", new ArrayList<String>(Arrays.asList("85.85")));
+            put("from_amount", new ArrayList<String>(Arrays.asList("85.85")));
         }};
         RatesExchangeService.apiKey = null;
         ObjectMapper objectMapper = new ObjectMapper();
@@ -183,8 +183,26 @@ class RatesExchangeControllerIntTest {
         MvcResult result = mvc.perform(request).andReturn();
 
         ExchangeAmountResponse expectedResponse = ExchangeAmountResponse.builder()
-                .errorMessage(RatesExchangeController.ERROR_API_KEY_IS_REQUIRED)
+                .error_Message(RatesExchangeController.ERROR_API_KEY_IS_REQUIRED)
                 .build();
         assertEquals(objectMapper.writeValueAsString(expectedResponse), result.getResponse().getContentAsString(), "RatesExchangeController.exchangeAmount() should return error. API Key is required");
+    }
+
+    @Test
+    void validateExchangeAmountRequestedAmountIsEmpty() throws Exception {
+        MultiValueMap<String, String> paramsMap = new LinkedMultiValueMap<>(){{
+            put("from", new ArrayList<String>(Arrays.asList("USD")));
+            put("to", new ArrayList<String>(Arrays.asList("EUR")));
+        }};
+        RatesExchangeService.apiKey = "apiKey";
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        RequestBuilder request = MockMvcRequestBuilders.get("/exchange_amount").queryParams(paramsMap);
+        MvcResult result = mvc.perform(request).andReturn();
+
+        ExchangeAmountResponse expectedResponse = ExchangeAmountResponse.builder()
+                .error_Message(RatesExchangeController.ERROR_REQUESTED_AMOUNT_IS_EMPTY)
+                .build();
+        assertEquals(objectMapper.writeValueAsString(expectedResponse), result.getResponse().getContentAsString(), "RatesExchangeController.exchangeAmount() should return error. Requested amount is empty");
     }
 }

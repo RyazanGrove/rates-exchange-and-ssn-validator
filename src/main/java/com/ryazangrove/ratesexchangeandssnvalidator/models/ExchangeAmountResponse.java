@@ -16,5 +16,5 @@ public class ExchangeAmountResponse {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     Double exchange_rate;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    String errorMessage;
+    String error_Message;
 }

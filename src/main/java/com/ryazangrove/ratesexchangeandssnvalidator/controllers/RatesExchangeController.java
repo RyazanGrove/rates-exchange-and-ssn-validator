@@ -13,6 +13,7 @@ public class RatesExchangeController {
 
     public static final String CORRECT = "OK";
     public static final String ERROR_CURRENCY_IS_EMPTY = "error: currency is empty";
+    public static final String ERROR_REQUESTED_AMOUNT_IS_EMPTY = "error: currency is empty";
     public static final String ERROR_CURRENCY_IS_NOT_SUPPORTED = "error: currency is not supported";
     public static final String ERROR_AMOUNT_INCORRECT_FORMAT = "error: currency incorrect format";
     public static final String ERROR_REQUESTED_AMOUNT_IS_NEGATIVE = "error: requested amount should not be negative";
@@ -24,18 +25,18 @@ public class RatesExchangeController {
     public ExchangeAmountResponse exchangeAmount(@RequestParam Map<String,String> requestParams){
         String from = requestParams.get("from");
         String to = requestParams.get("to");
-        double amount;
+        double from_amount;
 
         if(RatesExchangeService.apiKey == null){
             ExchangeAmountResponse response = ExchangeAmountResponse.builder()
-                    .errorMessage(ERROR_API_KEY_IS_REQUIRED)
+                    .error_Message(ERROR_API_KEY_IS_REQUIRED)
                     .build();
             return response;
         }
 
         if(RatesExchangeService.apiKeyIsIncorrect){
             ExchangeAmountResponse response = ExchangeAmountResponse.builder()
-                    .errorMessage(ERROR_API_KEY_IS_INCORRECT)
+                    .error_Message(ERROR_API_KEY_IS_INCORRECT)
                     .build();
             return response;
         }
@@ -43,25 +44,32 @@ public class RatesExchangeController {
         String errorMessage = checkRequestParameterErrors(from, to);
         if(!errorMessage.equals(CORRECT)){
             ExchangeAmountResponse response = ExchangeAmountResponse.builder()
-                    .errorMessage(errorMessage)
+                    .error_Message(errorMessage)
                     .build();
             return response;
         }
 
         try {
-            amount = Double.parseDouble(requestParams.get("amount"));
+            if(requestParams.get("from_amount") != null) {
+                from_amount = Double.parseDouble(requestParams.get("from_amount"));
+            } else {
+                ExchangeAmountResponse response = ExchangeAmountResponse.builder()
+                        .error_Message(ERROR_REQUESTED_AMOUNT_IS_EMPTY)
+                        .build();
+                return response;
+            }
         } catch (NumberFormatException e) {
             System.out.println(e);
             ExchangeAmountResponse response = ExchangeAmountResponse.builder()
-                    .errorMessage(ERROR_AMOUNT_INCORRECT_FORMAT)
+                    .error_Message(ERROR_AMOUNT_INCORRECT_FORMAT)
                     .build();
             return response;
         }
 
-        String verifyMessage = verifyRequestParameters(from, to, amount);
+        String verifyMessage = verifyRequestParameters(from, to, from_amount);
         if(!verifyMessage.equals(CORRECT)){
             ExchangeAmountResponse response = ExchangeAmountResponse.builder()
-                    .errorMessage(verifyMessage)
+                    .error_Message(verifyMessage)
                     .build();
             return response;
         }
@@ -71,11 +79,11 @@ public class RatesExchangeController {
             exchangeRate = RatesExchangeService.exchangeRatesMap.get(from + "-" + to);
         } else {
             ExchangeAmountResponse response = ExchangeAmountResponse.builder()
-                    .errorMessage(ERROR_SERVICE_DATA_UPDATE_ERROR)
+                    .error_Message(ERROR_SERVICE_DATA_UPDATE_ERROR)
                     .build();
             return response;
         }
-        double exchangeAmount = exchangeRate * amount;
+        double exchangeAmount = exchangeRate * from_amount;
 
         ExchangeAmountResponse response = ExchangeAmountResponse.builder()
                 .from(from)
