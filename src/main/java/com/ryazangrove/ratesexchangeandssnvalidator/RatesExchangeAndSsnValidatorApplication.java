@@ -9,7 +9,12 @@ public class RatesExchangeAndSsnValidatorApplication {
 
 	public static void main(String[] args) {
 		if(args.length < 1){
-			System.err.println("For RatesExchange API working API Key is required");
+			String apiKeyFromEnv = System.getenv("API_KEY");
+			if(apiKeyFromEnv != null){
+				RatesExchangeService.apiKey = apiKeyFromEnv;
+			} else {
+				System.err.println("For RatesExchange API working API Key is required");
+			}
 		} else {
 			RatesExchangeService.apiKey = args[0];
 		}
